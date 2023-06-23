@@ -3,14 +3,13 @@
 // When end user overrides via extension directory, this won't pick up the override.
 // This is a drawback of Alfresco JS importing.
 
-
 function uploaderPlusMain()
 {
     var repoFormData, fnFieldValue, idx, max, field, fieldName, value;
     
     repoFormData = new Packages.org.alfresco.repo.forms.FormData();
     if(logger.isLoggingEnabled()) {
-		logger.log("[Uploader plus] - uploaderPlusMain started...");
+		logger.log("[Uploader plus] - uploaderPlusMain started..");
 	}
     try {
         
@@ -52,9 +51,6 @@ function uploaderPlusMain()
                 default:
                     // any other field may be a form field (assoc_ or prop_ or any transient field)
                     value = fnFieldValue(field);
-					if(logger.isLoggingEnabled()) {
-						logger.log("[Uploader plus] - field: "+field+" | value: "+value);
-					}
                     if (value !== null)
                     {
                         repoFormData.addFieldData(fieldName, value);
@@ -78,29 +74,9 @@ function uploaderPlusMain()
             // very unlikely
             e.code = 404;
         }
-	    else if (e.message && e.message.indexOf("FileExistsException") != -1) {
-            //Rename and upload.
-			var fieldDataName = repoFormData.getFieldData("name");
-			var dotIndex = fieldDataName.lastIndexOf(".");
-			var tmpFilename = "";
-			  if (dotIndex > 0)
-		      {
-		         // Filename contained ".", create "filename-1.txt"
-		         tmpFilename = fieldDataName.substring(0, dotIndex) + "-" + "1" + fieldDataName.substring(dotIndex);
-		      }
-		      else
-		      {
-		         // Filename didn't contain a dot at all, create "filename-1"
-		         tmpFilename = fieldDataName + "-" + "1";
-		      }
-			//Add updated name
-			repoFormData.addFieldData("name", tmpFilename, true);
-	        formService.saveForm("node", model.document.nodeRef, repoFormData);
-
-        }
         else {
             e.code = 500;
-            e.message = "Unexpected error occurred during upload of new content in uploader plus.";
+            e.message = "[Uploader plus] - Unexpected error occurred during upload of new content!";
         }
         throw e;
     }
